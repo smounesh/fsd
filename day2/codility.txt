@@ -1,0 +1,15 @@
+
+Lesson1:
+ P1: https://app.codility.com/demo/results/trainingKHMURV-5X4/
+
+Lesson2 
+ P1: https://app.codility.com/demo/results/trainingXRBYMV-7W2/
+ 
+ p2: https://app.codility.com/demo/results/trainingB2JVKC-NR2/
+ 
+L3:
+ P1: https://app.codility.com/demo/results/trainingR82HNK-MRJ/
+ 
+ P2: https://app.codility.com/demo/results/trainingUT9BNZ-UNU/
+ 
+ P3: https://app.codility.com/demo/results/training7623HJ-GKT/

@@ -41,6 +41,7 @@ namespace RequestTrackerDALLibrary
             return _departments.ToList();
         }
 
+
         public void Remove(int id)
         {
             var departmentToRemove = _departments.FirstOrDefault(d => d.Id == id);
@@ -49,6 +50,7 @@ namespace RequestTrackerDALLibrary
                 _departments.Remove(departmentToRemove);
             }
         }
+
 
         public Department GetDepartmentByName(string departmentName)
         {

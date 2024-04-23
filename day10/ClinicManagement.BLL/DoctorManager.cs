@@ -19,7 +19,14 @@ namespace ClinicManagement.BLL
 
         public Doctor GetDoctorById(int id)
         {
-            return _doctorRepository.GetById(id);
+            try
+            {
+                return _doctorRepository.GetById(id);
+            }
+            catch (KeyNotFoundException)
+            {
+                return null; // Return null if the doctor with the specified id is not found
+            }
         }
 
         public Doctor AddDoctor(Doctor doctor)

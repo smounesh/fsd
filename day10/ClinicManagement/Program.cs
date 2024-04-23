@@ -12,8 +12,16 @@ namespace ClinicManagement.UI
             Console.WriteLine("Clinic Management System");
 
             // Example of using BLL and DAL
-            var doctorManager = new DoctorManager(new DoctorRepository(new List<Doctor>()));
-            var patientManager = new PatientManager(new PatientRepository(new List<Patient>()));
+            var doctorRepository = new DoctorRepository(new List<Doctor>());
+            var doctorManager = new DoctorManager(doctorRepository);
+
+            var patientRepository = new PatientRepository(new List<Patient>());
+            var patientManager = new PatientManager(patientRepository);
+
+            var appointmentRepository = new AppointmentRepository(new List<Appointment>());
+            var appointmentManager = new AppointmentManager(appointmentRepository, doctorManager, patientManager);
+
+
 
             while (true)
             {
@@ -26,7 +34,8 @@ namespace ClinicManagement.UI
                 Console.WriteLine("6. Update Patient");
                 Console.WriteLine("7. Delete Patient");
                 Console.WriteLine("8. List Patients");
-                Console.WriteLine("9. Exit");
+                Console.WriteLine("9. Book Appointment");
+                Console.WriteLine("10. Exit");
 
                 Console.Write("\nEnter option: ");
                 var option = Console.ReadLine();
@@ -174,11 +183,47 @@ namespace ClinicManagement.UI
                             Console.WriteLine($"ID: {patient.Id}, Name: {patient.Name}");
                         }
                         break;
-
+                
                     case "9":
+                        // Book Appointment
+                        Console.Write("Enter Doctor ID: ");
+                        if (!int.TryParse(Console.ReadLine(), out int doctorId))
+                        {
+                            Console.WriteLine("Invalid input for Doctor ID.");
+                            break;
+                        }
+
+                        Console.Write("Enter Patient ID: ");
+                        if (!int.TryParse(Console.ReadLine(), out int patientId))
+                        {
+                            Console.WriteLine("Invalid input for Patient ID.");
+                            break;
+                        }
+
+                        Console.Write("Enter Appointment Date and Time (yyyy-MM-dd HH:mm:ss): ");
+                        if (!DateTime.TryParse(Console.ReadLine(), out DateTime appointmentDateTime))
+                        {
+                            Console.WriteLine("Invalid input for Appointment Date and Time.");
+                            break;
+                        }
+
+                        try
+                        {
+                            appointmentManager.BookAppointment(doctorId, patientId, appointmentDateTime);
+                            Console.WriteLine("Appointment booked successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Failed to book appointment: {ex.Message}");
+                        }
+                        break;
+
+
+                    case "10":
                         // Exit
                         Console.WriteLine("Exiting...");
                         return;
+
                     default:
                         Console.WriteLine("Invalid option. Please try again.");
                         break;

@@ -1,9 +1,6 @@
 ﻿using ShoppingModelLibrary;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShoppingDALLibrary
 {
@@ -22,6 +19,10 @@ namespace ShoppingDALLibrary
         public override Product GetByKey(int key)
         {
             Product product = items.FirstOrDefault(p => p.Id == key);
+            if (product == null)
+            {
+                throw new ProductNotFoundException();
+            }
             return product;
         }
 

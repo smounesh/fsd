@@ -1,38 +1,57 @@
 ﻿using ShoppingModelLibrary;
 using ShoppingModelLibrary.Exceptions;
+using System;
+using System.Collections.Generic;
 
 namespace ShoppingDALLibrary
 {
     public class CustomerRepository : AbstractRepository<int, Customer>
     {
+        private List<Customer> items = new List<Customer>();
+
         public override Customer Delete(int key)
         {
-            Customer customer = GetByKey(key);
-            if (customer != null)
+            Customer customerToDelete = items.Find(customer => customer.Id == key);
+
+            if (customerToDelete != null)
             {
-                items.Remove(customer);
+                items.Remove(customerToDelete);
+                return customerToDelete;
             }
-            return customer;
+            else
+            {
+                return null;
+            }
         }
+
 
         public override Customer GetByKey(int key)
         {
-            for (int i = 0; i < items.Count; i++)
-            {
-                if (items[i].Id == key)
-                    return items[i];
-            }
-            throw new NoCustomerWithGiveIdException();
+            return items.Find(customer => customer.Id == key);
         }
 
         public override Customer Update(Customer item)
         {
-            Customer customer = GetByKey(item.Id);
-            if (customer != null)
+            try
             {
-                customer = item;
+                Customer existingCustomer = GetByKey(item.Id);
+                if (existingCustomer != null)
+                {
+                    existingCustomer.Name = item.Name;
+                    existingCustomer.Email = item.Email;
+                    return existingCustomer;
+                }
+                else
+                {
+                    throw new NoCustomerWithGivenIdException();
+                }
             }
-            return customer;
+            catch (Exception ex)
+            {
+                // Log the exception or handle it according to your application's requirements
+                throw; // Re-throw the exception to propagate it up the call stack
+            }
         }
     }
+
 }

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ShoppingDALLibrary
 {
@@ -11,28 +9,72 @@ namespace ShoppingDALLibrary
     {
         public override Cart Delete(int key)
         {
-            Cart cart = GetByKey(key);
-            if (cart != null)
+            try
             {
-                items.Remove(cart);
+                Cart cart = GetByKey(key);
+                if (cart != null)
+                {
+                    items.Remove(cart);
+                    return cart;
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Cart with the specified key was not found.");
+                }
             }
-            return cart;
+            catch (Exception ex)
+            {
+                // Log the exception or handle it according to your application's requirements
+                throw; // Re-throw the exception to propagate it up the call stack
+            }
         }
 
         public override Cart GetByKey(int key)
         {
-            Cart cart = items.FirstOrDefault(c => c.Id == key);
-            return cart;
+            try
+            {
+                Cart cart = items.FirstOrDefault(c => c.Id == key);
+                if (cart != null)
+                {
+                    return cart;
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Cart with the specified key was not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception or handle it according to your application's requirements
+                throw; // Re-throw the exception to propagate it up the call stack
+            }
         }
 
         public override Cart Update(Cart item)
         {
-            Cart cart = GetByKey(item.Id);
-            if (cart != null)
+            try
             {
-                cart = item;
+                Cart existingCart = GetByKey(item.Id);
+                if (existingCart != null)
+                {
+                    // Update the existing cart with the properties of the new item
+                    existingCart.CustomerId = item.CustomerId;
+                    existingCart.CartItems = item.CartItems;
+                    // You can update other properties similarly if needed
+
+                    // Optionally, you can return the updated cart
+                    return existingCart;
+                }
+                else
+                {
+                    throw new KeyNotFoundException("Cart with the specified key was not found.");
+                }
             }
-            return cart;
+            catch (Exception ex)
+            {
+                // Log the exception or handle it according to your application's requirements
+                throw; // Re-throw the exception to propagate it up the call stack
+            }
         }
     }
 }

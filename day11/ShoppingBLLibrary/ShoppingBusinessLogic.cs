@@ -6,13 +6,13 @@ namespace ShoppingBLLibrary
 {
     public class ShoppingBusinessLogic
     {
-        public double CalculateTotalPrice(Cart cart)
+        public async double CalculateTotalPrice(Cart cart)
         {
             double totalPrice = cart.CartItems.Sum(item => item.Price * item.Quantity);
             return totalPrice;
         }
 
-        public double ApplyShippingCharge(double totalPrice)
+        public async double ApplyShippingCharge(double totalPrice)
         {
             if (totalPrice < 100)
             {
@@ -22,7 +22,7 @@ namespace ShoppingBLLibrary
         }
 
 
-        public double ApplyDiscount(Cart cart)
+        public async double ApplyDiscount(Cart cart)
         {
             double totalPrice = CalculateTotalPrice(cart);
 
@@ -36,7 +36,7 @@ namespace ShoppingBLLibrary
         }
 
 
-        public bool ValidateCartQuantity(Cart cart)
+        public async bool ValidateCartQuantity(Cart cart)
         {
             foreach (var item in cart.CartItems)
             {

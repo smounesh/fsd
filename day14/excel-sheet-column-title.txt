@@ -1,0 +1,31 @@
+class Solution
+    {
+        public string ConvertToTitle(int columnNumber)
+        {
+            string letters = string.Empty;
+
+            int q = columnNumber;
+            int r = 0;
+            while(q > 0)
+            {
+                r = q % 26;
+                q = q / 26;
+                letters = AppendCharacter(letters, r);
+                if (r == 0)
+                    q = q - 1;
+            }
+
+            return letters;
+        }
+
+        private string AppendCharacter(string previousLetters, int r)
+        {
+            string newLetter;
+            if (r == 0)
+                newLetter = $"{((char)90)}{previousLetters}";
+            else
+                newLetter = $"{(char)(64 + r)}{previousLetters}";
+
+            return newLetter;
+        }
+    }

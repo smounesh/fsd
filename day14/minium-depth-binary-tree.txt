@@ -1,21 +1,22 @@
-public class Solution {
-    public int MinDepth(TreeNode root) {
-    if (root == null)
-	{
-		return 0;
-	}
-	
-	if (root.left == null)
-	{
-		return 1+ MinDepth(root.right);
-	}
-	
-	if (root.right == null)
-	{
-		return 1+ MinDepth(root.left);
-	}
-	
-	return 1 + Math.Min(MinDepth(root.left), MinDepth(root.right));
+using System.Threading.Tasks;
 
+public class Solution {
+    public async Task<int> MinDepthAsync(TreeNode root) {
+        if (root == null)
+        {
+            return 0;
+        }
+
+        if (root.left == null)
+        {
+            return 1 + await MinDepthAsync(root.right);
+        }
+
+        if (root.right == null)
+        {
+            return 1 + await MinDepthAsync(root.left);
+        }
+
+        return 1 + (int)await Task.WhenAll(MinDepthAsync(root.left), MinDepthAsync(root.right)).ContinueWith(t => Math.Min(t.Result[0], t.Result[1]));
     }
 }

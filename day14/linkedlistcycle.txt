@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
+
 public class Solution {
-    public bool HasCycle(ListNode head) {
+    public async Task<bool> HasCycleAsync(ListNode head) {
         ListNode slow_pointer = head, fast_pointer = head;
         while (fast_pointer != null && fast_pointer.next != null) {
             slow_pointer = slow_pointer.next;

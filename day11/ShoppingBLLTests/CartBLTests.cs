@@ -5,7 +5,6 @@ namespace ShoppingBLLTests
 {
     [TestFixture]
     public class CartBLTests
-    {
         [Test]
         public async Task AddCartAsync_ValidInput_ReturnsNewCart()
         {

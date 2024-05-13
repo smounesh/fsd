@@ -1,0 +1,120 @@
+﻿using RequestTrackerBLLibrary;
+using RequestTrackerDALLibrary;
+using RequestTrackerModelLibrary;
+using System;
+using System.Threading.Tasks;
+
+namespace RequestTrackerFEAPP
+{
+    internal class Program
+    {
+        private readonly IEmployeeLoginBL _employeeLoginBL;
+        private readonly IRequestManagementBL _requestManagementBL;
+        private readonly ISolutionManagementBL _solutionManagementBL;
+
+        public Program()
+        {
+            _employeeLoginBL = new EmployeeLoginBL();
+            _requestManagementBL = new RequestManagementBL(new RequestRepository(new RequestTrackerContext()));
+            _solutionManagementBL = new SolutionManagementBL(new RequestSolutionRepository(new RequestTrackerContext()));
+        }
+
+        public async Task SignInMenu()
+        {
+            Console.WriteLine("1. Register\n2. Login");
+            await GetSignInOption();
+        }
+
+        private async Task GetSignInOption()
+        {
+            Console.WriteLine("Enter your choice:");
+            int choice = Convert.ToInt32(Console.ReadLine());
+            switch (choice)
+            {
+                case 1:
+                    await GetRegisterDetails();
+                    break;
+                case 2:
+                    await GetLoginDetails();
+                    break;
+            }
+        }
+
+        private async Task GetRegisterDetails()
+        {
+            Console.WriteLine("- Register");
+            Console.WriteLine("Enter your name:");
+            string name = Console.ReadLine();
+            Console.WriteLine("Create password:");
+            string password = Console.ReadLine();
+            Console.WriteLine("Choose your role:\n1. Admin\n2. User");
+            int roleChoice = Convert.ToInt32(Console.ReadLine());
+            string role = (roleChoice == 1) ? "Admin" : "User";
+            await Register(name, password, role);
+        }
+
+        private async Task Register(string name, string password, string role)
+        {
+            try
+            {
+                Employee newEmployee = new Employee { Name = name, Password = password, Role = role };
+                var result = await _employeeLoginBL.Register(newEmployee);
+                Console.WriteLine($"Registration successful. Registered ID: {result.Id}");
+                await GetLoginDetails();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private async Task GetLoginDetails()
+        {
+            Console.WriteLine("Login");
+            Console.WriteLine("Please enter Employee ID:");
+            int id = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Please enter your password:");
+            string password = Console.ReadLine() ?? "";
+            await EmployeeLoginAsync(id, password);
+        }
+
+        public async Task CallEmployee(Employee employee)
+        {
+            if (employee.Role.ToLower() == "admin")
+            {
+                await new Admin(_requestManagementBL, _solutionManagementBL).StartAdmin(employee);
+            }
+            else if (employee.Role.ToLower() == "user")
+            {
+                await new User(_requestManagementBL, _solutionManagementBL).StartUser(employee);
+            }
+        }
+
+        private async Task EmployeeLoginAsync(int username, string password)
+        {
+            try
+            {
+                Employee employee = new Employee { Password = password, Id = username };
+                var result = await _employeeLoginBL.Login(employee);
+                if (result != null)
+                {
+                    Console.WriteLine("Login Success");
+                    await CallEmployee(result);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid username or password");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        public static async Task Main(string[] args)
+        {
+            await new Program().SignInMenu();
+        }
+    }
+}

@@ -7,42 +7,53 @@ namespace RequestTrackerFEAPP
 {
     internal class Program
     {
-        private IEmployeeLoginBL employeeLoginBL;
+        private readonly IEmployeeLoginBL _employeeLoginBL;
 
         public Program()
         {
-            employeeLoginBL = new EmployeeLoginBL();
+            _employeeLoginBL = new EmployeeLoginBL();
         }
 
-        public async Task SignInMenu()
+        public async Task MainMenu()
         {
-            Console.WriteLine("1. Register\n2. Login");
-            await GetSignInOption();
+            Console.WriteLine("1. Register");
+            Console.WriteLine("2. Login");
+            Console.WriteLine("3. Exit");
+            await ProcessOption();
         }
 
-        private async Task GetSignInOption()
+        private async Task ProcessOption()
         {
             Console.WriteLine("Enter your choice:");
             int choice = Convert.ToInt32(Console.ReadLine());
             switch (choice)
             {
                 case 1:
-                    await GetRegisterDetails();
+                    await RegisterUser();
                     break;
                 case 2:
-                    await GetLoginDetails();
+                    await LoginUser();
+                    break;
+                case 3:
+                    Environment.Exit(0);
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    await MainMenu();
                     break;
             }
         }
 
-        private async Task GetRegisterDetails()
+        private async Task RegisterUser()
         {
-            Console.WriteLine("-Register");
+            Console.WriteLine("- Register");
             Console.WriteLine("Enter your name:");
             string name = Console.ReadLine();
             Console.WriteLine("Create password:");
             string password = Console.ReadLine();
-            Console.WriteLine("Choose your role:\n1. Admin\n2. User");
+            Console.WriteLine("Choose your role:");
+            Console.WriteLine("1. Admin");
+            Console.WriteLine("2. User");
             int roleChoice = Convert.ToInt32(Console.ReadLine());
             string role = (roleChoice == 1) ? "Admin" : "User";
             await Register(name, password, role);
@@ -53,64 +64,68 @@ namespace RequestTrackerFEAPP
             try
             {
                 Employee newEmployee = new Employee { Name = name, Password = password, Role = role };
-                var result = await employeeLoginBL.Register(newEmployee);
+                var result = await _employeeLoginBL.Register(newEmployee);
                 Console.WriteLine($"Registration successful. Registered ID: {result.Id}");
-                await GetLoginDetails();
+                await MainMenu();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                await MainMenu();
             }
         }
 
-        private async Task GetLoginDetails()
+        private async Task LoginUser()
         {
-            Console.WriteLine("Login");
-            Console.WriteLine("Please enter Employee ID:");
+            Console.WriteLine("- Login");
+            Console.WriteLine("Please enter your Employee ID:");
             int id = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Please enter your password:");
-            string password = Console.ReadLine() ?? "";
-            await EmployeeLoginAsync(id, password);
+            string password = Console.ReadLine();
+            await Login(id, password);
         }
 
-
-        public async Task CallEmployee(Employee employee)
-        {
-            if (employee.Role.ToLower() == "admin")
-            {
-                await new Admin().StartAdmin(employee);
-            }
-            else if (employee.Role.ToLower() == "user")
-            {
-                await new User().StartUser(employee);
-            }
-        }
-
-        private async Task EmployeeLoginAsync(int username, string password)
+        private async Task Login(int id, string password)
         {
             try
             {
-                Employee employee = new Employee { Password = password, Id = username };
-                var result = await employeeLoginBL.Login(employee);
+                Employee employee = new Employee { Id = id, Password = password };
+                var result = await _employeeLoginBL.Login(employee);
                 if (result != null)
                 {
-                    Console.WriteLine("Login Success");
-                    await CallEmployee(result);
+                    Console.WriteLine($"Login successful. Welcome, {result.Name}!");
+
+                    // Check user's role
+                    if (result.Role.ToLower() == "admin")
+                    {
+                        await new AdminMenu().Start(result);
+                    }
+                    else if (result.Role.ToLower() == "user")
+                    {
+                        await new UserMenu().Start(result);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid role.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid username or password");
+                    Console.WriteLine("Invalid Employee ID or password. Please try again.");
+                    await LoginUser();
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                await LoginUser();
             }
         }
 
+
         public static async Task Main(string[] args)
         {
-            await new Program().SignInMenu();
+            await new Program().MainMenu();
         }
     }
 }

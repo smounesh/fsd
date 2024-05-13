@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Program.cs.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.29">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -16,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RequestTrackerBLLibrary\RequestTrackerBLLibrary.csproj" />
+    <ProjectReference Include="..\RequestTrackerModelLibrary\RequestTrackerModelLibrary.csproj" />
   </ItemGroup>
 
 </Project>

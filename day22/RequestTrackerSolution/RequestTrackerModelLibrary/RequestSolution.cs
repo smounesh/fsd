@@ -26,6 +26,7 @@ namespace RequestTrackerModelLibrary
         public DateTime SolvedDate { get; set; }
         public bool IsSolved { get; set; } = false;
         public string? RequestRaiserComment { get; set; }
+        public string? AdminResponse { get; set; }
         public ICollection<SolutionFeedback> Feedbacks { get; set; }
     }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employees</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        ul {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        li {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Employees</h1>
+    <ul id="employeeList">
+    </ul>
+
+    <script>
+        var employees = [
+            { name: 'John Doe', position: 'Software Engineer' },
+            { name: 'Jane Smith', position: 'Product Manager' }
+        ];
+
+        var employeeList = document.getElementById('employeeList');
+
+        employees.forEach(function(employee) {
+            var li = document.createElement('li');
+            li.textContent = employee.name + ' - ' + employee.position;
+            employeeList.appendChild(li);
+        });
+    </script>
+</body>
+</html>

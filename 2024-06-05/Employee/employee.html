@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employees</title>
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-indigo-600">Employees</h1>
+    <ul class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <li class="rounded-lg shadow-md overflow-hidden bg-blue-100"> <div class="w-full h-48 bg-cover bg-center" style="background-image: url('images/abstract1.jpg');"> </div>
+        <div class="p-4 text-white"> <h3 class="text-xl font-bold">John Doe</h3>
+          <p>Software Engineer</p>
+        </div>
+      </li>
+      <li class="rounded-lg shadow-md overflow-hidden bg-green-100"> <div class="w-full h-48 bg-cover bg-center" style="background-image: url('images/abstract2.jpg');"> </div>
+        <div class="p-4 text-white"> <h3 class="text-xl font-bold">Jane Smith</h3>
+          <p>Product Manager</p>
+        </div>
+      </li>
+      </ul>
+  </div>
+  <script>
+    // Function to extract initials from employee names
+    function getInitials(name) {
+      const parts = name.split(' ');
+      return parts[0].charAt(0) + (parts.length > 1 ? parts[1].charAt(0) : '');
+    }
+
+    // Loop through employee list items and set initials for default image
+    const employeeListItems = document.querySelectorAll('li');
+    employeeListItems.forEach(listItem => {
+      const nameElement = listItem.querySelector('h3');
+      const initialsSpan = listItem.querySelector('span');
+      if (nameElement && initialsSpan) {
+        initialsSpan.textContent = getInitials(nameElement.textContent);
+      }
+    });
+  </script>
+</body>
+</html>

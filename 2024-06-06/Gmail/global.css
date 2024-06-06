@@ -1,0 +1,41 @@
+body {
+  margin: 0;
+  line-height: normal;
+}
+
+:root {
+  /* fonts */
+  --font-open-sans: "Open Sans";
+  --font-roboto: Roboto;
+
+  /* font sizes */
+  --font-size-2xl: 21px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+
+  /* Colors */
+  --color-ghostwhite: #f7f8fc;
+  --gmail-black: #292929;
+  --gray-6: #f2f2f2;
+  --color-whitesmoke-100: #eee;
+  --gray-4: #bdbdbd;
+  --gray-1: #333;
+  --gmail-grey: #5d5c5d;
+
+  /* Gaps */
+  --gap-xl: 20px;
+  --gap-8xs: 5px;
+
+  /* Paddings */
+  --padding-8xs: 5px;
+  --padding-base: 16px;
+  --padding-167xl: 186px;
+  --padding-11xs: 2px;
+  --padding-6xs: 7px;
+  --padding-mini: 15px;
+  --padding-7xs: 6px;
+  --padding-12xs: 1px;
+
+  /* Border radiuses */
+  --br-8xs: 5px;
+}

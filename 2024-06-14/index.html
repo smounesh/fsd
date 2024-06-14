@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+        .input-error {
+            border-color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" onblur="validateName()">
+            <span id="nameError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" class="form-control" id="phone" name="phone" onblur="validatePhone()">
+            <span id="phoneError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <input type="date" class="form-control" id="dob" name="dob" onblur="calculateAge()">
+            <span id="dobError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="age">Age</label>
+            <input type="text" class="form-control" id="age" name="age" readonly>
+        </div>
+        <div class="form-group">
+            <label>Gender</label><br>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="Male">
+                <label class="form-check-label" for="male">Male</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="Female">
+                <label class="form-check-label" for="female">Female</label>
+            </div>
+            <span id="genderError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label>Qualification</label><br>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="qualification1" value="High School">
+                <label class="form-check-label" for="qualification1">High School</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="qualification2" value="Bachelor's">
+                <label class="form-check-label" for="qualification2">Bachelor's</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="qualification3" value="Master's">
+                <label class="form-check-label" for="qualification3">Master's</label>
+            </div>
+            <span id="qualificationError" class="error"></span>
+        </div>
+        <div class="form-group">
+            <label for="profession">Profession</label>
+            <input list="professionList" class="form-control" id="profession" name="profession" onblur="validateProfession()">
+            <datalist id="professionList">
+                <option value="Engineer">
+                <option value="Doctor">
+                <option value="Teacher">
+            </datalist>
+            <span id="professionError" class="error"></span>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="validateForm()">Submit</button>
+        <div id="formErrors" class="error mt-2"></div>
+    </form>
+</div>
+
+<!-- JavaScript for validation and age calculation -->
+<script>
+    let professionArray = ["Engineer", "Doctor", "Teacher"];
+
+    function calculateAge() {
+        const dob = document.getElementById('dob').value;
+        if (dob) {
+            const dobDate = new Date(dob);
+            const diffMs = Date.now() - dobDate.getTime();
+            const ageDate = new Date(diffMs);
+            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+            document.getElementById('age').value = age;
+        }
+        validateDOB();
+    }
+
+    function validateName() {
+        const name = document.getElementById('name').value;
+        const nameError = document.getElementById('nameError');
+        if (name.trim() === "") {
+            nameError.textContent = "Name is required.";
+            document.getElementById('name').classList.add('input-error');
+            return false;
+        } else {
+            nameError.textContent = "";
+            document.getElementById('name').classList.remove('input-error');
+            return true;
+        }
+    }
+
+    function validatePhone() {
+        const phone = document.getElementById('phone').value;
+        const phoneError = document.getElementById('phoneError');
+        const phonePattern = /^[0-9]{10}$/;
+        if (!phonePattern.test(phone)) {
+            phoneError.textContent = "Enter a valid 10-digit phone number.";
+            document.getElementById('phone').classList.add('input-error');
+            return false;
+        } else {
+            phoneError.textContent = "";
+            document.getElementById('phone').classList.remove('input-error');
+            return true;
+        }
+    }
+
+    function validateDOB() {
+        const dob = document.getElementById('dob').value;
+        const dobError = document.getElementById('dobError');
+        if (dob.trim() === "") {
+            dobError.textContent = "Date of Birth is required.";
+            document.getElementById('dob').classList.add('input-error');
+            return false;
+        } else {
+            dobError.textContent = "";
+            document.getElementById('dob').classList.remove('input-error');
+            return true;
+        }
+    }
+
+    function validateGender() {
+        const genderError = document.getElementById('genderError');
+        if (!document.querySelector('input[name="gender"]:checked')) {
+            genderError.textContent = "Please select your gender.";
+            return false;
+        } else {
+            genderError.textContent = "";
+            return true;
+        }
+    }
+
+    function validateQualification() {
+        const qualificationError = document.getElementById('qualificationError');
+        if (!document.querySelector('input[type="checkbox"]:checked')) {
+            qualificationError.textContent = "Please select at least one qualification.";
+            return false;
+        } else {
+            qualificationError.textContent = "";
+            return true;
+        }
+    }
+
+    function validateProfession() {
+        const profession = document.getElementById('profession').value;
+        const professionError = document.getElementById('professionError');
+        if (profession.trim() === "") {
+            professionError.textContent = "Profession is required.";
+            document.getElementById('profession').classList.add('input-error');
+            return false;
+        } else if (!professionArray.includes(profession)) {
+            professionArray.push(profession);
+            const datalist = document.getElementById('professionList');
+            const option = document.createElement('option');
+            option.value = profession;
+            datalist.appendChild(option);
+        }
+        professionError.textContent = "";
+        document.getElementById('profession').classList.remove('input-error');
+        return true;
+    }
+
+    function validateForm() {
+        const nameValid = validateName();
+        const phoneValid = validatePhone();
+        const dobValid = validateDOB();
+        const genderValid = validateGender();
+        const qualificationValid = validateQualification();
+        const professionValid = validateProfession();
+
+        const formErrors = document.getElementById('formErrors');
+        formErrors.textContent = "";
+
+        if (!nameValid || !phoneValid || !dobValid || !genderValid || !qualificationValid || !professionValid) {
+            formErrors.textContent = "Please fix the errors above.";
+            return false;
+        }
+        formErrors.textContent = "Form submitted successfully!";
+        return true;
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product List</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        .card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        .card img {
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .card-body {
+            padding: 15px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #333;
+        }
+        .card-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #28a745;
+        }
+        .additional-details {
+            display: none;
+            padding: 15px;
+            background-color: #f1f3f5;
+            border-top: 1px solid #e2e8f0;
+        }
+        .stars {
+            color: #ffc107;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4 text-2xl font-bold">Product List</h1>
+        <div id="productContainer" class="grid-container">
+            <!-- Product cards will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://dummyjson.com/products')
+                .then(response => response.json())
+                .then(data => {
+                    const products = data.products;
+                    const container = document.getElementById('productContainer');
+                    products.forEach(product => {
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+                        card.innerHTML = `
+                            <img src="${product.thumbnail}" class="card-img-top" alt="${product.title}">
+                            <div class="card-body">
+                                <h5 class="card-title">${product.title}</h5>
+                                <p class="card-text">$${product.price}</p>
+                                <div class="stars mb-2">${generateStars(product.rating)}</div>
+                                <div class="additional-details mt-3">
+                                    <p><strong>Description:</strong> ${product.description}</p>
+                                    <p><strong>Category:</strong> ${product.category}</p>
+                                    <p><strong>Stock:</strong> ${product.stock}</p>
+                                    <p><strong>Brand:</strong> ${product.brand}</p>
+                                </div>
+                            </div>
+                        `;
+                        card.addEventListener('click', () => {
+                            const details = card.querySelector('.additional-details');
+                            details.style.display = details.style.display === 'none' ? 'block' : 'none';
+                        });
+                        container.appendChild(card);
+                    });
+                })
+                .catch(error => console.error('Error fetching products:', error));
+        });
+
+        function generateStars(rating) {
+            const filledStars = Math.round(rating);
+            return '★'.repeat(filledStars) + '☆'.repeat(5 - filledStars);
+        }
+    </script>
+</body>
+</html>
